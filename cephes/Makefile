@@ -1,4 +1,4 @@
-all: cephes.so
+all: cephes.bc
 
-cephes.so: *.c
-	gcc -fPIC -shared -o cephes.so *.c
+cephes.bc: *.c
+	emcc -s LINKABLE=1 *.c -o cephes.bc

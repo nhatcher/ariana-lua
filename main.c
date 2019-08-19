@@ -5,6 +5,25 @@
 #include "lualib.h"
 #include "tfunc.h"
 
+
+int run_lua(const char* script) {
+	lua_State* lua = luaL_newstate();
+	luaL_openlibs(lua);
+	luaopen_tfunc(lua);
+
+	int res = luaL_dostring(lua, script);
+
+	size_t len = 0;
+	const char* value = lua_tolstring(lua, lua_gettop(lua), &len);
+
+	printf("%s\n", value);
+
+	lua_close(lua);
+
+	return 0;
+}
+
+/*
 int main(void) {
 	char buff[256];
 	int error;
@@ -23,6 +42,7 @@ int main(void) {
 	lua_close(lua);
 
 	return 0;
-}
+}*/
 
 // print(tfunc.j0(4));
+// print(tfunc.jn(2, 3.5));
