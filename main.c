@@ -25,4 +25,4 @@ int main(void) {
 	return 0;
 }
 
-// print(tfunc.sin(4));
+// print(tfunc.j0(4));

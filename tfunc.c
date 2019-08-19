@@ -4,15 +4,16 @@
 
 #include "lauxlib.h"
 #include "lualib.h"
+#include "cephes.h"
 
-static int tfunc_sin (lua_State *L) {
+static int tfunc_j0 (lua_State *L) {
 	double d = luaL_checknumber(L, 1);
-	lua_pushnumber(L, sin(d));
+	lua_pushnumber(L, cephes_j0(d));
 	return 1;
 }
 
 static const luaL_Reg tfunc[] = {
-  {"sin",   tfunc_sin},
+  {"j0",   tfunc_j0},
   {NULL, NULL}
 };
 
