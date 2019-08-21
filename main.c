@@ -4,12 +4,14 @@
 #include "lauxlib.h"
 #include "lualib.h"
 #include "tfunc.h"
+#include "plot.h"
 
 
 int run_lua(const char* script) {
 	lua_State* lua = luaL_newstate();
 	luaL_openlibs(lua);
 	luaopen_tfunc(lua);
+	luaopen_plot(lua);
 
 	int res = luaL_dostring(lua, script);
 

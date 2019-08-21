@@ -1,21 +1,24 @@
 
 CC= emcc
-CFLAGS= -O2 -Wall -Wextra
-
+CFLAGS= -Oz -Wall -g -Ilua-5.3.5/src -Icephes -Lcephes -Llua-5.3.5/src -lm -ldl
+LLVMFLAGS= -s EXPORTED_FUNCTIONS="['_run_lua']" -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' --js-library libs.js
 
 all: main
 
 main: cephes lua main.c
-	$(CC) $(CFLAGS)  tfunc.c main.c  -s WASM=1 -O1 -g -o main.js -s EXPORTED_FUNCTIONS="['_run_lua']" lua-5.3.5/src/liblua.a cephes/cephes.bc -Ilua-5.3.5/src -Icephes -Lcephes -Llua-5.3.5/src -lm -ldl
+	$(CC) $(CFLAGS) tfunc.c plot.c main.c -o main.html $(LLVMFLAGS) lua-5.3.5/src/liblua.a cephes/cephes.bc
 
 cephes:
 	cd cephes && make all
 
 lua:
-	cd lua-5.3.5/src && make generic CC='emcc -s WASM=1'
+	cd lua-5.3.5/src && make generic CC='emcc'
 
 clean:
 	cd lua-5.3.5/src && make clean
-	rm cephes/cephes.bc
+	rm -f cephes/cephes.bc
+	rm -f main.wasm
+	rm -f main.wast
+	rm -f main.wasm.map
 
 .PHONY: all clean cephes
