@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<title>Ariana</title>
+<link href="style.css" rel="stylesheet">
+<script src="vendor/codemirror.js"></script>
+<link href="vendor/codemirror.css" rel="stylesheet">
+<script src="vendor/lua.js"></script>
+<script type='text/javascript' src="entry.js"></script>
+<script>
+
+document.addEventListener("DOMContentLoaded", function(event) {
+  // const urlParams = new URLSearchParams(window.location.search);
+  // const script = urlParams.get('script');
+  // const editorEl = document.querySelector('#program-area textarea');
+  // if (script) {
+  //     editorEl.value = script;
+  // }
+  document.getElementById('script-area-edit').value = response;
+  const editor = CodeMirror.fromTextArea(document.getElementById("script-area-edit"), {
+    // matchBrackets: true,
+    // theme: "neat"
+  });
+  fetch('example.lua', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'text/plain; charset=UTF-8',
+    }
+  }).then(response => {
+    if (response.ok) {
+      response.text().then(response => {
+        editor.setValue(response);
+        entry(event, editor);
+      });
+    }
+  });
+});
+</script>
+</head>
+<body>
+  <div id="script-area">
+    <textarea id="script-area-edit"></textarea>
+  </div>
+  <div id="plot-area">
+    <canvas id="plot-canvas"></canvas>
+    <div id="horizontal-hint"></div>
+    <div id="vertical-hint"></div>
+</div>
+</body>
+
+</script>
+<script async type="text/javascript" src="main.js"></script>
+</html>
