@@ -22,73 +22,56 @@ extern void draw_function(double *, double *, int len, double miny, double maxy)
 // LUA_TTHREAD		8
 
 double *readNumberArray(lua_State *L) {
-  // printf("size: %zu\n\n", lua_rawlen(L, -1));
   double *p = (double *) malloc(sizeof(double) * lua_rawlen(L, -1));
-  lua_pushnil(L);
   int i = 0;
+  lua_pushnil(L);
   while (lua_next(L, -2) != 0) {
-    if (lua_type(L, -1) == LUA_TNUMBER) {
-      double t = lua_tonumber(L, -1);
-      p[i] = t;
-      if (lua_type(L, -2) == LUA_TNUMBER) {
-        double t2 = lua_tonumber(L, -2);
-        p[i] = t;
-      }
-    } else {
-      printf("oops\n");
-    }
+    double t = lua_tonumber(L, -1);
+    // TODO assert: 
+    // lua_type(L, -1) == LUA_TNUMBER
+    // lua_type(L, -2) == LUA_TNUMBER
+    // lua_tonumber(L, -2) == i+1
+    p[i] = t;
     lua_pop(L, 1);
     i++;
   }
-  // printf("%d Read terms\n", i);
   return p;
 }
 
 
-
 void readPlotData(lua_State *L) {
-  lua_pushnil(L);
-  int i = 0;
-  double *datax;
+  double *datax, *datay;
   int lenx, leny;
-  double *datay;
   double ymax, ymin;
+  lua_pushnil(L);
   while (lua_next(L, -2) != 0) {
-    if (lua_type(L, -1) == LUA_TNUMBER) {
+    const char *key = lua_tostring(L, -2);
+    // printf("Computing key %s\n", key);
+    // ASSERT lua_type(L, -2) == LUA_TSTRING
+    // printf("%s[%s]\n",
+    //   lua_typename(L, lua_type(L, -2)),
+    //   lua_typename(L, lua_type(L, -1))
+    // );
+    if (strcmp(key, "ymax") == 0) {
       double t = lua_tonumber(L, -1);
-      if (lua_type(L, -2) == LUA_TSTRING) {
-        const char *s2 = lua_tostring(L, -2);
-        if (strcmp(s2, "ymax")) {
-          ymax = t;
-        } else if (strcmp(s2, "ymin")) {
-          ymin = t;
-        }
-        printf("%s=%f\n", s2, t);
-      } else {
-        printf("oops\n\n");
-      }
-    } else if (lua_type(L, -1) == LUA_TTABLE) {
-      // printf("Table: %zu\n", lua_rawlen(L, -1));
-      const char *s2 = lua_tostring(L, -2);
-      if (strcmp(s2, "datax")) {
-        lenx = lua_rawlen(L, -1);
-        datax = readNumberArray(L);
-      } else if (strcmp(s2, "datay")) {
-        leny = lua_rawlen(L, -1);
-        datay = readNumberArray(L);
-      }
-      // printf("%s[4] = %f\n", s2, p[4]);
+      ymax = t;
+    } else if (strcmp(key, "ymin") == 0) {
+      double t = lua_tonumber(L, -1);
+      ymin = t;
+    } else if (strcmp(key, "datax") == 0) {
+      lenx = lua_rawlen(L, -1);
+      datax = readNumberArray(L);
+    } else if (strcmp(key, "datay") == 0) {
+      leny = lua_rawlen(L, -1);
+      datay = readNumberArray(L);
     } else {
-      printf("oops\n");
+      printf("oops\n\n");
     }
     lua_pop(L, 1);
-    i++;
   }
-  printf("datax[0]=%f, datay[0]=%f", datax[0], datay[0]);
   draw_function(datax, datay, lenx, ymax, ymin);
   free(datax);
   free(datay);
-  // printf("%d, %d, %d terms\n", i, iN, iS);
 }
 
 static int plot_set_point (lua_State *L) {

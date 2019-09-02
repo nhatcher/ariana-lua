@@ -20,17 +20,17 @@
 
 #plot-area {
     position: absolute;
-    left: 405px;
+    left: 805px;
     right: 0px;
-    bottom: 240px;
+    bottom: 40px;
     top: 40px;
 }
 
-#program-area {
+#script-area {
     position: absolute;
     left: 0px;
     top: 40px;
-    width: 400px;
+    width: 800px;
     bottom: 80px;
     border-right: 5px solid gray;
     font-size: 16px;

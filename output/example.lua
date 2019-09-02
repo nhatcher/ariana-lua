@@ -7,7 +7,7 @@ function isNaN(x)
 end
 
 function getDataPoints(g, xmin, xmax)
-  local N = 10;
+  local N = 1000;
   local ymin;
   local ymax;
   local step = (xmax-xmin)/N;
@@ -38,19 +38,7 @@ function getDataPoints(g, xmin, xmax)
   }
 end
 
-
-function Plot(g, xmin, xmax)
-  local x = xmin;
-  local N = 100;
-  local xwidth = xmax - xmin;
-  local step = (xmax - xmin)/N;
-  local data = {};
-  local ymax, ymin;
-  for x=xmin, xmax, step do
-    plot.set_point(x, g(x));
-    x = x + step;
-  end
-end
+-----------
 
 function main()
   local function f(x)
@@ -58,7 +46,8 @@ function main()
   end
 
   -- Plot(f, -5, 5)
-  local w = getDataPoints(f, -5, 5)
+  local w = getDataPoints(f, -5, 5);
+  print(w.datax[1]);
   plot.set_function(w);
 end
 
