@@ -1,3 +1,5 @@
+json = require "modules/json"
+
 local utils = { _version = "0.1.0"}
 
 local function isNaN(x)
@@ -8,7 +10,7 @@ local function isNaN(x)
   end
 end
 
-local function getDataPoints(g, xmin, xmax, color)
+local function getDataPoints(g, xmin, xmax)
   local N = 1000;
   local ymin;
   local ymax;
@@ -36,16 +38,25 @@ local function getDataPoints(g, xmin, xmax, color)
       ymax=ymax,
       ymin=ymin,
       datax=datax,
-      datay=datay,
-      xmin=xmin,
-      xmax=xmax,
-      color=color
+      datay=datay
   }
 end
 
-function utils.plot(f, xmin, xmax, color)
-  local w = getDataPoints(f, xmin, xmax, color);
-  plot.set_function(w);
+function utils.plot(fun, options)
+  local w = getDataPoints(fun.f, options.xmin, options.xmax);
+  data = {} 
+  data[1] = {
+    datax = w.datax;
+    datay = w.datay;
+    options={
+      color=fun.color,
+      width=fun.width
+    }
+  }
+  options.data=data;
+  options.ymin = w.ymin;
+  options.ymax = w.ymax;
+  plot.plot_function(json.encode(options));
 end
 
 return utils;

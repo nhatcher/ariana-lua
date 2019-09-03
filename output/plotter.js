@@ -52,10 +52,8 @@ const plotter = (function() {
       var ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      let xrange = options.xrange;
-
-      const xmin = xrange[0];
-      const xmax = xrange[1];
+      const xmin = options.xmin;
+      const xmax = options.xmax;
       const xwidth = xmax - xmin;
       const plotwidth = width - options.padding.left - options.padding.right;
       const xscale = plotwidth/xwidth;
