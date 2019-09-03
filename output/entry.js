@@ -1,5 +1,5 @@
 
-function entry(event, plot_area, editor, util_script) {
+function entry(event, plot_area, editor) {
   const Module = luaWASM({
     // onRuntimeInitialized: text_changed,
     postRun: [
@@ -14,21 +14,24 @@ function entry(event, plot_area, editor, util_script) {
     printErr: function () {
       console.error(...arguments);
     },
-    draw_function: function(p_datax, p_datay, len, min, max) {
+    draw_function: function(p_datax, p_datay, len, min, max, xmin, xmax, p_color, len_color) {
+      const utf8decoder = new TextDecoder();
       const datax = Module.HEAPF64.slice(p_datax/8, p_datax/8 + len);
       const datay = Module.HEAPF64.slice(p_datay/8, p_datay/8 + len);
+      const color = utf8decoder.decode(Module.HEAP8.slice(p_color, p_color + len_color));
+      console.log(color, p_color, len_color);
       plotter('plot-canvas', {
         data: [{
           datax: datax, 
           datay: datay,
           options: {
-            color: 'red',
+            color: color,
             width: 2
           }
         }],
         ymin: min,
         ymax: max,
-        xrange: [-5, 5],
+        xrange: [xmin, xmax],
         padding: {
           left: 10,
           right: 10,
@@ -44,7 +47,7 @@ function entry(event, plot_area, editor, util_script) {
   });
 
   function text_changed() {
-    const input = util_script + editor.getValue();
+    const input = editor.getValue();
     console.time('compute');
     Module.ccall("run_lua", 'number', ['string'], [input]);
     console.timeEnd('compute');
@@ -52,4 +55,5 @@ function entry(event, plot_area, editor, util_script) {
   editor.on('change', () => {
     text_changed();
   })
+  window.__ww = Module
 }

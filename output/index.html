@@ -31,12 +31,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }).then(response => {
     if (response.ok) {
       response.text().then(txt => {
-        const scripts = txt.split('-----------');
-        const util_script = scripts[0];
-        const example_script = scripts[1].trim();
-        editor.setValue(example_script);
+        editor.setValue(txt);
         const plot_area = document.getElementById('plot_area');
-        entry(event, plot_area, editor, util_script);
+        entry(event, plot_area, editor);
       });
     }
   });

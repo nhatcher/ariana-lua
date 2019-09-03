@@ -9,7 +9,7 @@
 extern void set_point(double x, double y);
 extern void * malloc(size_t t);
 extern void free(void *);
-extern void draw_function(double *, double *, int len, double miny, double maxy);
+extern void draw_function(double *, double *, int len, double miny, double maxy, double xmin, double xmax, char *color, int color_len);
 
 // LUA_TNIL		0
 // LUA_TBOOLEAN		1
@@ -43,6 +43,8 @@ void readPlotData(lua_State *L) {
   double *datax, *datay;
   int lenx, leny;
   double ymax, ymin;
+  double xmin, xmax;
+  char *color;
   lua_pushnil(L);
   while (lua_next(L, -2) != 0) {
     const char *key = lua_tostring(L, -2);
@@ -53,23 +55,27 @@ void readPlotData(lua_State *L) {
     //   lua_typename(L, lua_type(L, -1))
     // );
     if (strcmp(key, "ymax") == 0) {
-      double t = lua_tonumber(L, -1);
-      ymax = t;
+      ymax = lua_tonumber(L, -1);
     } else if (strcmp(key, "ymin") == 0) {
-      double t = lua_tonumber(L, -1);
-      ymin = t;
+      ymin = lua_tonumber(L, -1);
+    } else  if (strcmp(key, "xmax") == 0) {
+      xmax = lua_tonumber(L, -1);
+    } else if (strcmp(key, "xmin") == 0) {
+      xmin = lua_tonumber(L, -1);
     } else if (strcmp(key, "datax") == 0) {
       lenx = lua_rawlen(L, -1);
       datax = readNumberArray(L);
     } else if (strcmp(key, "datay") == 0) {
       leny = lua_rawlen(L, -1);
       datay = readNumberArray(L);
+    } else if (strcmp(key, "color") == 0) {
+      color = lua_tostring(L, -1);
     } else {
       printf("oops\n\n");
     }
     lua_pop(L, 1);
   }
-  draw_function(datax, datay, lenx, ymax, ymin);
+  draw_function(datax, datay, lenx, ymax, ymin, xmin, xmax, color, (int) strlen(color));
   free(datax);
   free(datay);
 }
