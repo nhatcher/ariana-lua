@@ -6,15 +6,14 @@ LLVMFLAGS= -s EXPORT_NAME="_arianaWASM"\
 					 -s ASSERTIONS=1\
 					 -s EXPORTED_FUNCTIONS="['_run_lua']"\
 					 -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'\
-					 --js-library js/libs.js\
-					 --no-heap-copy
+					 --js-library js/libs.js
 
 all: output/main.js
 
 
 
 output/main-raw.js: cephes lua c/main.c
-	$(CC) $(CFLAGS) c/tfunc.c c/plot.c c/main.c -o output/main.js $(LLVMFLAGS) lua-5.3.5/src/liblua.a cephes/cephes.bc --preload-file modules/
+	$(CC) $(CFLAGS) c/tfunc.c c/plot.c c/main.c -o output/main.js $(LLVMFLAGS) lua-5.3.5/src/liblua.a cephes/cephes.bc --preload-file modules/ --no-heap-copy
 	mv output/main.js output/main-raw.js
 
 output/main.js: js/shell-pre.js output/main-raw.js js/shell-post.js

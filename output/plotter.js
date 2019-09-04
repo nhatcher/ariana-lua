@@ -62,21 +62,11 @@ const plotter = (function() {
       const data = options.data;
       const ymin = options.ymax;
       const ymax = options.ymin;
-      /*for (let i=0; i<list.length; i++) {
-          let ret = plot(list[i].value, xmin, xmax);
-          if (i == 0) {
-              ymin = ret.ymin;
-              ymax = ret.ymax;
-          } else {
-              ymin = Math.min(ret.ymin, ymin);
-              ymax = Math.max(ret.ymax, ymax);
-          }
-          data.push({datax:ret.datax, datay:ret.datay});
-      }
+
       if (options.ysoftmax) {
           ymax = Math.min(options.ysoftmax, ymax);
           ymin = Math.max(ymin, options.ysoftmin);
-      }*/
+      }
 
       const yheight = ymax - ymin;
       const plotheight = height - options.padding.top - options.padding.bottom;
@@ -94,12 +84,9 @@ const plotter = (function() {
       function getPlotY(y) {
           return (-y+height-options.padding.bottom)/yscale + ymin;
       }
-      console.log(xscale, yscale)
       // grid
       var xticks = getPrettyTicks(xmin, xmax, width);
       var yticks = getPrettyTicks(ymin, ymax, height);
-      console.log(ymax, ymin, xticks, options);
-      
       ctx.strokeStyle = options.gridcolor;
       ctx.lineWidth = options['gridwidth'];
       ctx.beginPath();
@@ -187,38 +174,6 @@ const plotter = (function() {
           horizontal_hint.style.top = '-1px';
       });
   };
-
-  // function plot(f, xmin, xmax) {
-  //     let N = 10000,
-  //         ymin,
-  //         ymax,
-  //         step = (xmax-xmin)/N,
-  //         datax = [],
-  //         datay = [],
-  //         x, y;
-
-  //     for (x=xmin; x<=xmax; x += step) {
-  //         y = f(x);
-  //         if (isNaN(y)){
-  //             // 0/0 
-  //             continue;
-  //         }
-  //         if (isNaN(ymin) || y<ymin) {
-  //             ymin = y;
-  //         }
-  //         if (isNaN(ymax) || y>ymax) {
-  //             ymax = y;
-  //         }
-  //         datax.push(x)
-  //         datay.push(y);
-  //     }
-  //     return {
-  //         ymax: ymax,
-  //         ymin: ymin,
-  //         datax: datax,
-  //         datay: datay
-  //     }
-  // }
 
   return plotter;
 
