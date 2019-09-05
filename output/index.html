@@ -78,6 +78,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 </script>
 </head>
 <body>
+  <div id="header">
+    <div id="selection">
+      <span class="selected">Script</span>
+      <span class="selected">Plots</span>
+      <span>Output</span>
+    </div>
+  </div>
   <div id="script-area">
     <textarea id="script-area-edit"></textarea>
   </div>
@@ -85,7 +92,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     <canvas id="plot-canvas"></canvas>
     <div id="horizontal-hint"></div>
     <div id="vertical-hint"></div>
-</div>
+ </div>
+ <div id="footer"></div>
 </body>
 
 </html>
