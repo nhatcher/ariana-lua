@@ -7,22 +7,61 @@
 <script src="vendor/codemirror.js"></script>
 <link href="vendor/codemirror.css" rel="stylesheet">
 <script src="vendor/lua.js"></script>
+<script type="text/javascript" src="main.js"></script>
 <script type='text/javascript' src="entry.js"></script>
 <script type='text/javascript' src="plotter.js"></script>
 <script>
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  // const urlParams = new URLSearchParams(window.location.search);
-  // const script = urlParams.get('script');
-  // const editorEl = document.querySelector('#program-area textarea');
-  // if (script) {
-  //     editorEl.value = script;
-  // }
-  // document.getElementById('script-area-edit').value = response;
+  const plot_canvas = document.querySelector('#plot-canvas');
+  const plot_area = document.getElementById('plot-area');
+  const program_area = document.querySelector('#script-area');
   const editor = CodeMirror.fromTextArea(document.getElementById('script-area-edit'), {
     // matchBrackets: true,
     // theme: "neat"
   });
+
+  const Module = luaWASM({
+    // onRuntimeInitialized: refresh,
+    postRun: [
+      init
+    ],
+    // instantiateWasm: function(inports, callback) {
+
+    // },
+    print: function () {
+      console.log(...arguments);
+    },
+    printErr: function () {
+      console.error(...arguments);
+    },
+    draw_function: function(p_str, len) {
+      const utf8decoder = new TextDecoder();
+      const options = JSON.parse(utf8decoder.decode(Module.HEAP8.slice(p_str, p_str + len)));
+      plotter('plot-canvas', options);
+    }
+  });
+  function init() {
+    function resize() {
+      plot_canvas.setAttribute('width', plot_area.clientWidth);
+      plot_canvas.setAttribute('height', plot_area.clientHeight);
+      editor.setSize(program_area.clientWidth, program_area.clientHeight);
+      refresh();
+    }
+    window.addEventListener('resize', resize, true);
+    function refresh() {
+      const input = editor.getValue();
+      console.time('compute');
+      Module.ccall("run_lua", 'number', ['string'], [input]);
+      console.timeEnd('compute');
+    };
+
+    editor.on('blur', () => {
+      refresh();
+    });
+    resize();
+  }
+
   fetch('example.lua', {
     method: 'GET',
     headers: {
@@ -32,23 +71,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if (response.ok) {
       response.text().then(txt => {
         editor.setValue(txt);
-        const plot_area = document.getElementById('plot_area');
-        entry(event, plot_area, editor);
       });
     }
   });
-  function resize() {
-        var plot_area = document.querySelector('#plot-area');
-        var plot_canvas = document.querySelector('#plot-canvas');
-        plot_canvas.setAttribute('width', plot_area.clientWidth);
-        plot_canvas.setAttribute('height', plot_area.clientHeight);
-        var program_area = document.querySelector('#script-area');
-        editor.setSize(program_area.clientWidth, program_area.clientHeight);
-        // update();
-    }
-    window.addEventListener('resize', () => { resize(); }, true);
-    resize();
-
 });
 </script>
 </head>
@@ -63,6 +88,4 @@ document.addEventListener("DOMContentLoaded", function(event) {
 </div>
 </body>
 
-</script>
-<script async type="text/javascript" src="main.js"></script>
 </html>

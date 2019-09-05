@@ -52,8 +52,8 @@ local defaults = {
   },
   gridcolor='#ccc',
   gridwidth=1,
-  axiscolor='blue',
-  axiswidth=1
+  axiscolor='#ccc',
+  axiswidth=2
 }
 
 local function setDefaults(options)

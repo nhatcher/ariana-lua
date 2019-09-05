@@ -1,9 +1,9 @@
 
-function entry(event, plot_area, editor) {
+function entry(editor) {
   const Module = luaWASM({
-    // onRuntimeInitialized: text_changed,
+    // onRuntimeInitialized: refresh,
     postRun: [
-      text_changed
+      refresh
     ],
     // instantiateWasm: function(inports, callback) {
 
@@ -21,14 +21,14 @@ function entry(event, plot_area, editor) {
     }
   });
 
-  function text_changed() {
+  function refresh() {
     const input = editor.getValue();
     console.time('compute');
     Module.ccall("run_lua", 'number', ['string'], [input]);
     console.timeEnd('compute');
   };
 
-  editor.on('change', () => {
-    text_changed();
+  editor.on('blur', () => {
+    refresh();
   });
 }

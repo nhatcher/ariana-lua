@@ -4,16 +4,22 @@ function main()
   local function besselj0(x)
     return BesselJ(0, x)
   end
-  local function besselj1(x)
-    return BesselJ(1, x)
+  local function bsum(x)
+    s = 0
+    for i=1,5 do
+      s = s + BesselJ(i, x)
+    end
+    return s
   end
   local options = {
-    xmin=0,
+    xmin=-5,
     xmax=20
   }
   local functions = {}
-  functions[1] = {name=besselj0, color="red", width=2}
-  functions[2] = {name=besselj1, color="blue", width=2}
+  functions = {
+    {name=besselj0, color="red", width=1}, 
+    {name=bsum, color="blue", width=5}
+  }
   utils.plot(functions, options)
 end
 

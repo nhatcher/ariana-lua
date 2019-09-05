@@ -32,3 +32,20 @@ $ make
 
 # serve the output folder
 ```
+
+
+EXTERNAL DEPENDENCIES
+---------------------
+
+* Lua
+* Cephes (node-cephes)
+* Lua json (https://github.com/rxi/json.lua)
+
+Algorithms
+----------
+
+https://yacas.readthedocs.io/en/latest/book_of_algorithms/index.html
+https://stackoverflow.com/questions/47403145/implementing-adaptive-function-plotting
+https://math.stackexchange.com/questions/43842/plotting-an-equation
+
+https://mauriciopoppe.github.io/function-plot/
