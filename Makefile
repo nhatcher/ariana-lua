@@ -34,6 +34,6 @@ clean:
 	rm -f docs/main.wast
 	rm -f docs/main.wasm.map
 	# rm -f docs/main.js
-	rm -f docs/main.data
+	# rm -f docs/main.data
 
 .PHONY: all clean cephes
