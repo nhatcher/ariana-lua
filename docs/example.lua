@@ -1,4 +1,4 @@
-utils = require "modules/utils"
+local ariana = require "ariana"
 
 function main()
   local function besselj0(x)
@@ -20,7 +20,7 @@ function main()
     {name=besselj0, color="red", width=1}, 
     {name=bsum, color="blue", width=5}
   }
-  utils.plot(functions, options)
+  ariana.plot(functions, options)
 end
 
 main()

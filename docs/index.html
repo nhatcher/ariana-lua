@@ -10,15 +10,19 @@
 <script type="text/javascript" src="main.js"></script>
 <script type='text/javascript' src="entry.js"></script>
 <script type='text/javascript' src="plotter.js"></script>
+<script type='text/javascript' src="draggable.js"></script>
 <script>
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  const plot_canvas = document.querySelector('#plot-canvas');
+  const parameter_area = document.getElementById('parameter-area');
+  const plot_canvas = document.getElementById('plot-canvas');
   const plot_area = document.getElementById('plot-area');
-  const program_area = document.querySelector('#script-area');
+  const script_area = document.getElementById('script-area');
+  const output_area = document.getElementById('output-area');
   const editor = CodeMirror.fromTextArea(document.getElementById('script-area-edit'), {
     // matchBrackets: true,
     // theme: "neat"
+    lineNumbers: true
   });
 
   const Module = luaWASM({
@@ -30,7 +34,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     // },
     print: function () {
-      console.log(...arguments);
+      // console.log(...arguments);
+      for (let i=0; i<arguments.length; i++) {
+        const el = document.createElement('div');
+        el.innerText = arguments[i];
+
+        output_area.appendChild(el);
+      }
     },
     printErr: function () {
       console.error(...arguments);
@@ -41,17 +51,54 @@ document.addEventListener("DOMContentLoaded", function(event) {
       plotter('plot-canvas', options);
     }
   });
+  function getPanelFromValue(panel_value) {
+    switch(panel_value) {
+      case 'parameters':
+        return parameter_area;
+      case 'script':
+        return script_area;
+      case 'plots':
+        return plot_area;
+      case 'output':
+        return output_area;
+      default:
+        throw Error(`Invalid value: ${panel_value}`);
+    }
+  }
   function init() {
+    function reset_geometry() {
+      const panels = document.querySelectorAll('#selection li');
+      let left = 0;
+      let panel_count = document.querySelectorAll('#selection li.selected').length;
+      const width = Math.floor(window.outerWidth/panel_count);
+      panels.forEach(element => {
+        const panel_value = element.getAttribute('value');
+        let panel = getPanelFromValue(panel_value);
+        if (element.classList.contains('selected')) {
+          console.log(left, width,panel_value);
+          panel.style.display = 'block';
+          panel.style.left = left + 'px';
+          panel.style.width = width + 'px';
+          left += width;
+        } else {
+          panel.style.display = 'none';
+        }
+      });
+      resize();
+    }
+
     function resize() {
       plot_canvas.setAttribute('width', plot_area.clientWidth);
       plot_canvas.setAttribute('height', plot_area.clientHeight);
-      editor.setSize(program_area.clientWidth, program_area.clientHeight);
+      editor.setSize(script_area.clientWidth, script_area.clientHeight);
       refresh();
     }
+
     window.addEventListener('resize', resize, true);
     function refresh() {
       const input = editor.getValue();
       console.time('compute');
+      output_area.innerHTML = '';
       Module.ccall("run_lua", 'number', ['string'], [input]);
       console.timeEnd('compute');
     };
@@ -60,6 +107,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
       refresh();
     });
     resize();
+    dragElement(document.getElementById('script-area-handle'), (left) => {
+      script_area.style.width = left + 'px';
+      plot_area.style.left = left + 'px';
+    }, () => {
+      resize();
+    });
+    document.querySelector('#selection').addEventListener('click', (e) => {
+    const target = e.target;
+    if(target.classList.contains('button')) {
+      target.classList.toggle('selected');
+      reset_geometry();
+    }
+  });
   }
 
   fetch('example.lua', {
@@ -80,20 +140,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
 <body>
   <div id="header">
     <div id="selection">
-      <span class="selected">Script</span>
-      <span class="selected">Plots</span>
-      <span>Output</span>
+      <ul>
+        <li value="parameters" class="button">Parameters</li>
+        <li value="script" class="selected button">Script</li>
+        <li value="plots" class="selected button">Plots</li>
+        <li value="output" class="button">Output</li>
+      </ul>
     </div>
   </div>
+  <div id="parameter-area">Parameters!</div>
+  <div id="parameter-area-handle" class="resize-handle"></div>
   <div id="script-area">
     <textarea id="script-area-edit"></textarea>
   </div>
+  <div id="script-area-handle" class="resize-handle"></div>
   <div id="plot-area">
     <canvas id="plot-canvas"></canvas>
     <div id="horizontal-hint"></div>
     <div id="vertical-hint"></div>
  </div>
- <div id="footer"></div>
+ <div id="plot-area-handle" class="resize-handle"></div>
+ <div id="output-area"></div>
 </body>
 
 </html>

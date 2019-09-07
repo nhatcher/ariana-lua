@@ -1,6 +1,6 @@
-json = require "modules/json"
+local json = require "json"
 
-local utils = { _version = "0.1.0"}
+local ariana = { _version = "0.1.0"}
 
 local function isNaN(x)
   if type(x) == 'number' then
@@ -10,11 +10,10 @@ local function isNaN(x)
   end
 end
 
-local function getDataPoints(g, xmin, xmax)
-  local N = 1000;
+local function getDataPoints(g, xmin, xmax, points)
   local ymin;
   local ymax;
-  local step = (xmax-xmin)/N;
+  local step = (xmax-xmin)/points;
   local datax = {};
   local datay = {};
   local x, y;
@@ -42,6 +41,7 @@ local function getDataPoints(g, xmin, xmax)
   }
 end
 local defaults = {
+  points=1000,
   xmin=-5,
   xmax=5,
   padding={
@@ -64,14 +64,14 @@ local function setDefaults(options)
   end
 end
 
-function utils.plot(funtions, options)
+function ariana.plot(funtions, options)
   local data = {};
   local ymin, ymax;
   setDefaults(options)
   local xmin = options.xmin
   local xmax = options.xmax
   for i, fun in ipairs(funtions) do
-    local w = getDataPoints(fun.name, xmin, xmax)
+    local w = getDataPoints(fun.name, xmin, xmax, options.points)
     data[i] = {
       datax = w.datax;
       datay = w.datay;
@@ -93,4 +93,4 @@ function utils.plot(funtions, options)
   plot.plot_function(json.encode(options))
 end
 
-return utils;
+return ariana;
