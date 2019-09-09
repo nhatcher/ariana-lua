@@ -59,8 +59,8 @@ const plotter = (function() {
 
       //let list = context['functions'];
       const data = options.data;
-      const ymin = options.ymax;
-      const ymax = options.ymin;
+      const ymin = options.ymin;
+      const ymax = options.ymax;
 
       if (options.ysoftmax) {
           ymax = Math.min(options.ysoftmax, ymax);
@@ -84,33 +84,34 @@ const plotter = (function() {
           return (-y+height-options.padding.bottom)/yscale + ymin;
       }
       // grid
-      var xticks = getPrettyTicks(xmin, xmax, width);
-      var yticks = getPrettyTicks(ymin, ymax, height);
+      const xticks = getPrettyTicks(xmin, xmax, width);
+      const yticks = getPrettyTicks(ymin, ymax, height);
       ctx.strokeStyle = options.gridcolor;
       ctx.lineWidth = options['gridwidth'];
       ctx.beginPath();
       ctx.font = '12px monospace';
-      for (var i=0; i<xticks.length; i++) {
+      for (let i=0; i<xticks.length; i++) {
           // line
           x = getScreenX(xticks[i]);
           y = getScreenY(0);
           ctx.moveTo(x, 0);
           ctx.lineTo(x, height);
           // label
-          var label = getSafeLabel(xticks[i], xmax-xmin);
+          const label = getSafeLabel(xticks[i], xmax-xmin);
           ctx.fillText(label, x, y + 12);
           // ticks
           ctx.moveTo(x, y + 10);
           ctx.lineTo(x, y - 10);
       }
-      for (var i=0; i<yticks.length; i++) {
+
+      for (let i=0; i<yticks.length; i++) {
           // line
           y = getScreenY(yticks[i]);
           x = getScreenX(0);
           ctx.moveTo(0, y);
           ctx.lineTo(width, y);
           // label
-          var label = getSafeLabel(yticks[i], ymax-ymin);
+          const label = getSafeLabel(yticks[i], ymax-ymin);
           ctx.fillText(label, x + 2, y - 3);
           // ticks
           ctx.moveTo(x - 10, y);

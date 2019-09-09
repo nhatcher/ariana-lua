@@ -58,7 +58,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
     slider: function(p_str, len) {
       const utf8decoder = new TextDecoder();
       const options = JSON.parse(utf8decoder.decode(Module.HEAP8.slice(p_str, p_str + len)));
-      console.log('slider', options);
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('slider-wrapper');
+      parameter_area.appendChild(wrapper);
+      const span = document.createElement('span');
+      wrapper.appendChild(span);
+      wrapper.innerText = options['name'] + ' = ';
       const el = document.createElement('input');
       el.setAttribute('type', 'range');
       el.setAttribute('min', options['min']);
@@ -66,17 +71,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
       el.setAttribute('step', options['step']);
       el.setAttribute('name', options['name']);
       el.setAttribute('value', options['value']);
+      el.classList.add('slider');
       // <input id="slider1" type="range" min="100" max="500" step="10" />
-      parameter_area.appendChild(el);
-      el.addEventListener('input', () => {
-        const run = document.getElementById('run-script-button');
-        const event = new MouseEvent('click', {
-          view: window,
-          bubbles: true,
-          cancelable: true
-        });
-        run.dispatchEvent(event);
-      });
+      wrapper.appendChild(el);
     },
     checkbox: function(p_str, len) {
       const utf8decoder = new TextDecoder();
@@ -127,9 +124,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
       refresh();
     }
 
-    function getState() {
+    function getState(bKeepParameters) {
       const inputs = parameter_area.querySelectorAll('input');
+      sKeep = !!bKeepParameters ? 'True' : 'False';
       let state = 'plot.state = {}\n';
+      state += `plot["keep_parameters"]=${!!bKeepParameters}\n`;
       for (let i=0; i<inputs.length; i++) {
         const input = inputs[i];
         const type = input.getAttribute('type');
@@ -139,21 +138,34 @@ document.addEventListener("DOMContentLoaded", function(event) {
           state += `plot.state['${name}'] = ${value}\n`;
         }
       }
-      console.log(state)
       return state.trim();
     }
 
     window.addEventListener('resize', resize, true);
-    function refresh() {
-      const input = getState() + '\n' + editor.getValue();
+    function refresh(bKeepParameters) {
+      const input = getState(bKeepParameters) + '\n' + editor.getValue();
       console.time('compute');
       output_area.innerHTML = '';
-      parameter_area.innerHTML = '';
+      if (!bKeepParameters) {
+        parameter_area.innerHTML = '';
+      }
       plot_area.querySelector('.arena').innerHTML = '';
       Module.ccall("run_lua", 'number', ['string'], [input]);
       const first_canvas = plot_area.querySelector('canvas');
       if (first_canvas !== null) {
         first_canvas.classList.add('selected');
+      }
+      if (!bKeepParameters) {
+        parameter_area.addEventListener('input', () => {
+          refresh(true);
+          // const run = document.getElementById('run-script-button');
+          // const event = new MouseEvent('click', {
+          //   view: window,
+          //   bubbles: true,
+          //   cancelable: true
+          // });
+          // run.dispatchEvent(event);
+        });
       }
       console.timeEnd('compute');
     };
