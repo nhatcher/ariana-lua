@@ -100,12 +100,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
       const panels = document.querySelectorAll('#selection li');
       let left = 0;
       let panel_count = document.querySelectorAll('#selection li.selected').length;
-      const width = Math.floor(window.outerWidth/panel_count);
+      const width = Math.floor(window.innerWidth/panel_count);
       panels.forEach(element => {
         const panel_value = element.getAttribute('value');
         let panel = getPanelFromValue(panel_value);
         if (element.classList.contains('selected')) {
-          console.log(left, width,panel_value);
           panel.style.display = 'block';
           panel.style.left = left + 'px';
           panel.style.width = width + 'px';
