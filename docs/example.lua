@@ -13,7 +13,9 @@ function main()
   functions = {
     {name=besselj0, color="red", width=1}
   }
-  ariana.plot(functions, options)
+  local my_canvas = ariana.plot(functions, options)
+  my_canvas.set('fillStyle', 'green')
+  my_canvas.call('fillRect', {20*a, 20*a, 150*a, 100*a})
 end
 
 main()

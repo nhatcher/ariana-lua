@@ -13,7 +13,7 @@ all: docs/main.js
 
 
 docs/main-raw.js: cephes lua c/main.c
-	$(CC) $(CFLAGS) c/tfunc.c c/plot.c c/main.c -o docs/main.js $(LLVMFLAGS) lua-5.3.5/src/liblua.a cephes/cephes.bc --preload-file modules/@/ --no-heap-copy
+	$(CC) $(CFLAGS) c/tfunc.c c/plot.c c/canvas.c c/main.c -o docs/main.js $(LLVMFLAGS) lua-5.3.5/src/liblua.a cephes/cephes.bc --preload-file modules/@/ --no-heap-copy
 	mv docs/main.js docs/main-raw.js
 
 docs/main.js: js/shell-pre.js docs/main-raw.js js/shell-post.js

@@ -10,6 +10,8 @@ local function isNaN(x)
   end
 end
 
+local canvasID = 0
+
 local function getDataPoints(g, xmin, xmax, points)
   local ymin;
   local ymax;
@@ -91,6 +93,18 @@ function ariana.plot(funtions, options)
   options.ymin = ymin
   options.ymax = ymax
   plot.plot_function(json.encode(options))
+  canvasID = canvasID + 1;
+  function set(property, value)
+    canvas.set(canvasID, property, value)
+  end
+  function call(name, values)
+    canvas.call(canvasID, name, json.encode(values))
+  end
+  return {
+    canvasID=canvasID,
+    set=set,
+    call=call
+  }
 end
 
 function ariana.Slider(value, min, max, name)

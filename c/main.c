@@ -5,6 +5,7 @@
 #include "lualib.h"
 #include "tfunc.h"
 #include "plot.h"
+#include "canvas.h"
 
 
 int run_lua(const char* script) {
@@ -12,6 +13,7 @@ int run_lua(const char* script) {
 	luaL_openlibs(lua);
 	luaopen_tfunc(lua);
 	luaopen_plot(lua);
+	luaopen_canvas(lua);
 
 	// int res = 
 	luaL_dostring(lua, script);

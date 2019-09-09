@@ -10,5 +10,11 @@ mergeInto(LibraryManager.library, {
   },
   checkbox: function(str, len) {
     Module.checkbox(str, len);
+  },
+  set: function(canvasID, property, plen, value, vlen) {
+    Module.canvas_set(canvasID, property, plen, value, vlen);
+  },
+  call: function(canvasID, name, nlen, values, vlen) {
+    Module.canvas_call(canvasID, name, nlen, values, vlen);
   }
 });

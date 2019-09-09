@@ -79,6 +79,26 @@ document.addEventListener("DOMContentLoaded", function(event) {
       const utf8decoder = new TextDecoder();
       const options = JSON.parse(utf8decoder.decode(Module.HEAP8.slice(p_str, p_str + len)));
       console.log('checkbox', options);
+    },
+    canvas_set: function(canvasID, p_property, plen, p_value, vlen) {
+      console.log('canvas_set', ...arguments);
+      const utf8decoder = new TextDecoder();
+      const property = utf8decoder.decode(Module.HEAP8.slice(p_property, p_property + plen));
+      const value = utf8decoder.decode(Module.HEAP8.slice(p_value, p_value + vlen));
+      const cnv = plot_area.querySelectorAll('canvas')[canvasID-1];
+      const ctx = cnv.getContext('2d');
+      console.log(property, value);
+      ctx[property] = value;
+    },
+    canvas_call: function(canvasID, p_name, plen, p_values, vlen) {
+      console.log('canvas_call', ...arguments);
+      const utf8decoder = new TextDecoder();
+      const name = utf8decoder.decode(Module.HEAP8.slice(p_name, p_name + plen));
+      const values = JSON.parse(utf8decoder.decode(Module.HEAP8.slice(p_values, p_values + vlen)));
+      const cnv = plot_area.querySelectorAll('canvas')[canvasID-1];
+      const ctx = cnv.getContext('2d');
+      console.log(name, values)
+      ctx[name](...values);
     }
   });
   function getPanelFromValue(panel_value) {
