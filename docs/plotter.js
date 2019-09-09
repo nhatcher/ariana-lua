@@ -44,8 +44,7 @@ const plotter = (function() {
       }
       return s + '';
   }
-  function plotter(canvasId, options) {
-      var canvas = document.getElementById(canvasId);
+  function plotter(canvas, options) {
       var plot_area = document.getElementById('plot-area');
       var width = canvas.width;
       var height = canvas.height;

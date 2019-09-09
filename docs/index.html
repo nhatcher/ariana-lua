@@ -15,7 +15,7 @@
 
 document.addEventListener("DOMContentLoaded", function(event) {
   const parameter_area = document.getElementById('parameter-area');
-  const plot_canvas = document.getElementById('plot-canvas');
+  // const plot_canvas = document.getElementById('plot-canvas');
   const plot_area = document.getElementById('plot-area');
   const script_area = document.getElementById('script-area');
   const output_area = document.getElementById('output-area');
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     // },
     print: function () {
-      // console.log(...arguments);
+      console.log(...arguments);
       for (let i=0; i<arguments.length; i++) {
         const el = document.createElement('div');
         el.innerText = arguments[i];
@@ -48,7 +48,40 @@ document.addEventListener("DOMContentLoaded", function(event) {
     draw_function: function(p_str, len) {
       const utf8decoder = new TextDecoder();
       const options = JSON.parse(utf8decoder.decode(Module.HEAP8.slice(p_str, p_str + len)));
-      plotter('plot-canvas', options);
+      const canvas = document.createElement('canvas');
+      const plot_arena = plot_area.querySelector('.arena');
+      plot_arena.appendChild(canvas);
+      canvas.setAttribute('width', plot_arena.clientWidth);
+      canvas.setAttribute('height', plot_arena.clientHeight);
+      plotter(canvas, options);
+    },
+    slider: function(p_str, len) {
+      const utf8decoder = new TextDecoder();
+      const options = JSON.parse(utf8decoder.decode(Module.HEAP8.slice(p_str, p_str + len)));
+      console.log('slider', options);
+      const el = document.createElement('input');
+      el.setAttribute('type', 'range');
+      el.setAttribute('min', options['min']);
+      el.setAttribute('max', options['max']);
+      el.setAttribute('step', options['step']);
+      el.setAttribute('name', options['name']);
+      el.setAttribute('value', options['value']);
+      // <input id="slider1" type="range" min="100" max="500" step="10" />
+      parameter_area.appendChild(el);
+      el.addEventListener('input', () => {
+        const run = document.getElementById('run-script-button');
+        const event = new MouseEvent('click', {
+          view: window,
+          bubbles: true,
+          cancelable: true
+        });
+        run.dispatchEvent(event);
+      });
+    },
+    checkbox: function(p_str, len) {
+      const utf8decoder = new TextDecoder();
+      const options = JSON.parse(utf8decoder.decode(Module.HEAP8.slice(p_str, p_str + len)));
+      console.log('checkbox', options);
     }
   });
   function getPanelFromValue(panel_value) {
@@ -88,38 +121,94 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     function resize() {
-      plot_canvas.setAttribute('width', plot_area.clientWidth);
-      plot_canvas.setAttribute('height', plot_area.clientHeight);
-      editor.setSize(script_area.clientWidth, script_area.clientHeight);
+      const plot_arena = plot_area.querySelector('.arena');
+      const script_arena = script_area.querySelector('.arena');
+      editor.setSize(script_area.clientWidth, script_arena.clientHeight);
       refresh();
+    }
+
+    function getState() {
+      const inputs = parameter_area.querySelectorAll('input');
+      let state = 'plot.state = {}\n';
+      for (let i=0; i<inputs.length; i++) {
+        const input = inputs[i];
+        const type = input.getAttribute('type');
+        if (type === 'range') {
+          const name = input.getAttribute('name');
+          const value = input.value;
+          state += `plot.state['${name}'] = ${value}\n`;
+        }
+      }
+      console.log(state)
+      return state.trim();
     }
 
     window.addEventListener('resize', resize, true);
     function refresh() {
-      const input = editor.getValue();
+      const input = getState() + '\n' + editor.getValue();
       console.time('compute');
       output_area.innerHTML = '';
+      parameter_area.innerHTML = '';
+      plot_area.querySelector('.arena').innerHTML = '';
       Module.ccall("run_lua", 'number', ['string'], [input]);
+      const first_canvas = plot_area.querySelector('canvas');
+      if (first_canvas !== null) {
+        first_canvas.classList.add('selected');
+      }
       console.timeEnd('compute');
     };
 
-    editor.on('blur', () => {
-      refresh();
+    editor.on('change', () => {
+      if (document.getElementById('script-life-checkbox').checked) {
+        refresh();
+      }
     });
     resize();
-    dragElement(document.getElementById('script-area-handle'), (left) => {
+    /*dragElement(document.getElementById('script-area-handle'), (left) => {
       script_area.style.width = left + 'px';
       plot_area.style.left = left + 'px';
     }, () => {
       resize();
+    });*/
+    document.querySelector('#run-script-button').addEventListener('click', (e) => {
+      refresh();
     });
     document.querySelector('#selection').addEventListener('click', (e) => {
-    const target = e.target;
-    if(target.classList.contains('button')) {
-      target.classList.toggle('selected');
-      reset_geometry();
+      const target = e.target;
+      if(target.classList.contains('button')) {
+        target.classList.toggle('selected');
+        reset_geometry();
+      }
+    });
+    function selectPlot(j) {
+      const plots = plot_area.querySelectorAll('canvas');
+      const plot_count = plots.length;
+      if (plot_count < 2) {
+        return;
+      }
+      let index = 0;
+      for (let i=0; i<plot_count; i++) {
+        if (plots[i].classList.contains('selected')) {
+          plots[i].classList.remove('selected');
+          index = i + j;
+          break;
+        }
+      }
+      if (index>=plot_count) {
+        index = 0;
+      }
+      if (index<0) {
+        index = plot_count - 1;
+      }
+      plots[index].classList.add('selected');
     }
-  });
+    document.querySelector('#previous-plot').addEventListener('click', (e) => {
+      selectPlot(-1);
+    });
+    document.querySelector('#next-plot').addEventListener('click', (e) => {
+      selectPlot(1);
+    });
+
   }
 
   fetch('example.lua', {
@@ -148,19 +237,40 @@ document.addEventListener("DOMContentLoaded", function(event) {
       </ul>
     </div>
   </div>
-  <div id="parameter-area">Parameters!</div>
+  <div id="parameter-area" class="panel">Parameters!</div>
   <div id="parameter-area-handle" class="resize-handle"></div>
-  <div id="script-area">
-    <textarea id="script-area-edit"></textarea>
+  <div id="script-area" class="panel">
+    <div class="arena">
+      <textarea id="script-area-edit"></textarea>
+    </div>
+    <div class="footer">
+      <div class="left">
+        <input id="script-life-checkbox" type="checkbox">
+        <label for="script-life-checkbox">Auto run</label>
+      </div>
+      <div class="right">
+        <span id="run-script-button" class="button">Run</span>
+      </div>
+    </div>
   </div>
   <div id="script-area-handle" class="resize-handle"></div>
-  <div id="plot-area">
-    <canvas id="plot-canvas"></canvas>
+  <div id="plot-area" class="panel">
+    <div class="arena">
+      <!-- <canvas id="plot-canvas"></canvas> -->
+    </div>
     <div id="horizontal-hint"></div>
     <div id="vertical-hint"></div>
+    <div class="footer">
+      <div class="right">
+        <span id="next-plot" class="button">Next</span>
+      </div>
+      <div class="right">
+        <span id="previous-plot" class="button">Prev</span>
+      </div>
+    </div>
  </div>
  <div id="plot-area-handle" class="resize-handle"></div>
- <div id="output-area"></div>
+ <div id="output-area"  class="panel"></div>
 </body>
 
 </html>

@@ -13,7 +13,8 @@ int run_lua(const char* script) {
 	luaopen_tfunc(lua);
 	luaopen_plot(lua);
 
-	int res = luaL_dostring(lua, script);
+	// int res = 
+	luaL_dostring(lua, script);
 
 	size_t len = 0;
 	const char* value = lua_tolstring(lua, lua_gettop(lua), &len);

@@ -11,6 +11,8 @@ extern void * malloc(size_t t);
 extern void free(void *);
 // extern void draw_function(double *, double *, int len, double miny, double maxy, double xmin, double xmax, char *color, int color_len);
 extern void draw_function(const char *str, int len);
+extern void slider(const char *str, int len);
+extern void checkbox(const char *str, int len);
 // LUA_TNIL		0
 // LUA_TBOOLEAN		1
 // LUA_TLIGHTUSERDATA	2
@@ -93,16 +95,30 @@ extern void draw_function(const char *str, int len);
 // 	return 0;
 // }
 
-static int plot_plot_function (lua_State *L) {
+static int plot_function (lua_State *L) {
   const char *str = lua_tostring(L, -1);
   draw_function(str, (int) strlen(str));
+	return 0;
+}
+
+static int plot_slider (lua_State *L) {
+  const char *str = lua_tostring(L, -1);
+  slider(str, (int) strlen(str));
+	return 0;
+}
+
+static int plot_checkbox (lua_State *L) {
+  const char *str = lua_tostring(L, -1);
+  checkbox(str, (int) strlen(str));
 	return 0;
 }
 
 static const luaL_Reg plot[] = {
   // {"set_point", plot_set_point},
   // {"set_function", plot_set_function},
-  {"plot_function", plot_plot_function},
+  {"plot_function", plot_function},
+  {"checkbox", plot_checkbox},
+  {"slider", plot_slider},
   {NULL, NULL}
 };
 

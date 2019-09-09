@@ -4,5 +4,11 @@ mergeInto(LibraryManager.library, {
   },
   draw_function: function(str, len) {
     Module.draw_function(str, len);
+  },
+  slider: function(str, len) {
+    Module.slider(str, len);
+  },
+  checkbox: function(str, len) {
+    Module.checkbox(str, len);
   }
 });

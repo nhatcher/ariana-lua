@@ -93,4 +93,31 @@ function ariana.plot(funtions, options)
   plot.plot_function(json.encode(options))
 end
 
+function ariana.Slider(value, min, max, name)
+  options = {}
+  if plot.state[name] == nil then
+    options['value'] = value
+  else
+    options['value'] = plot.state[name]
+  end
+  options['min'] = min
+  options['max'] = max
+  options['step'] = (max-min)/10
+  options.name = name
+  plot.slider(json.encode(options))
+  return options['value']
+end
+
+function ariana.Checkbox(value, name)
+  options = {}
+  if plot.state[name] == nil then
+    options['value'] = value
+  else
+    options['value'] = plot.state[name]
+  end
+  options.name = name
+  plot.chekbox(json.encode(options))
+  return options['value']
+end
+
 return ariana;
