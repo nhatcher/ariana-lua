@@ -494,17 +494,22 @@ function ariana.plot(funtions, options)
   options.ymax = ymax
   plot.plot_function(json.encode(options))
   canvasID = canvasID + 1;
-  function set(property, value)
-    canvas.set(canvasID, property, value)
-  end
-  function call(name, values)
-    canvas.call(canvasID, name, json.encode(values))
-  end
-  return {
-    canvasID=canvasID,
-    set=set,
-    call=call
+
+  local mt = {
+    __newindex=function(_, property, value)
+      canvas.set(canvasID, property, value)
+    end,
+    __index=function(_, property)
+      return function(...)
+        canvas.call(canvasID, property, json.encode({...}))
+      end
+    end
   }
+  local proxy = {
+    canvasID=canvasID
+  }
+  setmetatable(proxy, mt)
+  return proxy
 end
 
 function ariana.Slider(value, min, max, name)
