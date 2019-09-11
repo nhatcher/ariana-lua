@@ -1,8 +1,8 @@
--- We import the ariana's tools
+-- We import Ariana's tools
 local ariana = require "ariana"
 
--- We create a slider!
-local a = ariana.Slider(1, 0, 5, 'a')
+-- We can create a slider!
+local a = ariana.Slider(1, 0, 50, 'a')
 
 -- Define the function we want to draw
 local function besselj0(x)
@@ -11,7 +11,7 @@ end
 
 -- some options 
 local options = {
-  xmin=-5,
+  xmin=-20,
   xmax=20
 }
 local functions = {{name=besselj0, color="red", width=1}}
@@ -25,6 +25,6 @@ width = ctx.width()
 height = ctx.height()
 
 ctx.fillStyle = 'green'
-ctx.fillRect(width/2 - 10, height/2 - 10, 10*a, 10*a)
+ctx.fillRect(width/2 - 10*a, height/2 - 10*a, 20*a, 20*a)
 
 
