@@ -20,9 +20,11 @@ local functions = {{name=besselj0, color="red", width=1}}
 local ctx = ariana.plot(functions, options)
 
 -- We get back a handle to the canvas
-ctx.fillStyle = 'green'
+-- We can get the width and height of the canvas
 width = ctx.width()
 height = ctx.height()
+
+ctx.fillStyle = 'green'
 ctx.fillRect(width/2 - 10, height/2 - 10, 10*a, 10*a)
 
 
