@@ -99,6 +99,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
       const ctx = cnv.getContext('2d');
       console.log(name, values)
       ctx[name](...values);
+    },
+    canvas_width: function(canvasID, p_width) {
+      const cnv = plot_area.querySelectorAll('canvas')[canvasID-1];
+      // const ctx = cnv.getContext('2d');
+      Module.HEAP32[p_width/4] = cnv.width;
+    },
+    canvas_height: function(canvasID, p_height) {
+      const cnv = plot_area.querySelectorAll('canvas')[canvasID-1];
+      // const ctx = cnv.getContext('2d');
+      Module.HEAP32[p_height/4] = cnv.height;
     }
   });
   function getPanelFromValue(panel_value) {

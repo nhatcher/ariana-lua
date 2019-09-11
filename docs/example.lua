@@ -21,5 +21,8 @@ local ctx = ariana.plot(functions, options)
 
 -- We get back a handle to the canvas
 ctx.fillStyle = 'green'
-ctx.fillRect(20*a, 20*a, 150*a, 100*a)
+width = ctx.width()
+height = ctx.height()
+ctx.fillRect(width/2 - 10, height/2 - 10, 10*a, 10*a)
+
 

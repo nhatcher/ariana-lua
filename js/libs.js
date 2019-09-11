@@ -16,5 +16,11 @@ mergeInto(LibraryManager.library, {
   },
   call: function(canvasID, name, nlen, values, vlen) {
     Module.canvas_call(canvasID, name, nlen, values, vlen);
+  },
+  canvasWidth: function(canvasID, p_result) {
+    Module.canvas_width(canvasID, p_result);
+  },
+  canvasHeight: function(canvasID, p_result) {
+    Module.canvas_height(canvasID, p_result);
   }
 });

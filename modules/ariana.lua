@@ -106,7 +106,13 @@ function ariana.plot(funtions, options)
     end
   }
   local proxy = {
-    canvasID=canvasID
+    canvasID=canvasID,
+    width=function()
+      return canvas.width(canvasID)
+    end,
+    height=function()
+      return canvas.height(canvasID)
+    end
   }
   setmetatable(proxy, mt)
   return proxy

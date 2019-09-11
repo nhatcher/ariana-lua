@@ -12,6 +12,8 @@ extern void free(void *);
 extern void set(int canvasID, const char *str, int len, const char *str1, int len1);
 extern void call(int canvasID, const char *str, int len, const char *str1, int len1);
 
+extern void canvasWidth(int canvasID, int *result);
+extern void canvasHeight(int canvasID, int *result);
 
 static int canvas_set (lua_State *L) {
   int canvasID = lua_tointeger(L, -3);
@@ -29,10 +31,27 @@ static int canvas_call (lua_State *L) {
 	return 0;
 }
 
+static int canvas_width (lua_State *L) {
+  int canvasID = lua_tointeger(L, -1);
+  int width;
+  canvasWidth(canvasID, &width);
+  lua_pushinteger(L, width);
+	return 1;
+}
+
+static int canvas_height (lua_State *L) {
+  int canvasID = lua_tointeger(L, -1);
+  int height;
+  canvasHeight(canvasID, &height);
+  lua_pushinteger(L, height);
+	return 1;
+}
 
 static const luaL_Reg canvas[] = {
   {"set", canvas_set},
   {"call", canvas_call},
+  {"width", canvas_width},
+  {"height", canvas_height},
   {NULL, NULL}
 };
 
