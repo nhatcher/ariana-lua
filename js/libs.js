@@ -20,6 +20,9 @@ mergeInto(LibraryManager.library, {
   call: function(canvasID, name, nlen, values, vlen) {
     Module.canvas_call(canvasID, name, nlen, values, vlen);
   },
+  fillRect: function(canvasID, x, y, dx, dy) {
+    Module.fillRect(canvasID, x, y, dx, dy);
+  },
   canvasWidth: function(canvasID, p_result) {
     Module.canvas_width(canvasID, p_result);
   },

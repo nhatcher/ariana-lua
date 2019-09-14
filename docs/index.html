@@ -107,7 +107,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
       const values = JSON.parse(utf8decoder.decode(Module.HEAP8.slice(p_values, p_values + vlen)));
       const cnv = plot_area.querySelectorAll('canvas')[canvasID-1];
       const ctx = cnv.getContext('2d');
-      ctx[name](...values);
+      if (name === 'putImageData') {
+        const imageData = ctx.getImageData(0, 0, cnv.width, cnv.height);
+        console.log(imageData.data.length, values[0].length);
+        imageData.data = values[0];
+        ctx.putImageData(imageData, 0, 0);
+      } else {
+        ctx[name](...values);
+      }
+    },
+    fillRect: function(canvasID, x, y, dx, dy) {
+      const cnv = plot_area.querySelectorAll('canvas')[canvasID-1];
+      const ctx = cnv.getContext('2d');
+      ctx.fillRect(x, y, dx, dy);
     },
     canvas_width: function(canvasID, p_width) {
       const cnv = plot_area.querySelectorAll('canvas')[canvasID-1];
@@ -252,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   }
   const select = document.querySelector('#examples select');
-  const examples_list = ['simple', 'bessel', 'canvas'];
+  const examples_list = ['simple', 'bessel', 'canvas', 'mandelbrot'];
   for (let i=0; i<examples_list.length; i++) {
     const el = document.createElement('option');
     const example_name = examples_list[i];

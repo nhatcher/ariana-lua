@@ -170,6 +170,9 @@ function ariana.canvas(options)
   }
   local proxy = {
     canvasID=canvasID,
+    fillRect = function(x, y, dx, dy)
+      canvas.fillRect(canvasID, x, y, dx, dy)
+    end,
     width=function()
       return canvas.width(canvasID)
     end,
