@@ -5,6 +5,9 @@ mergeInto(LibraryManager.library, {
   draw_function: function(str, len) {
     Module.draw_function(str, len);
   },
+  newCanvas: function(str, len) {
+    Module.newCanvas(str, len);
+  },
   slider: function(str, len) {
     Module.slider(str, len);
   },

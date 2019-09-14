@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <title>Ariana</title>
-<link href="style.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
 <script src="vendor/codemirror.js"></script>
 <link href="vendor/codemirror.css" rel="stylesheet">
 <script src="vendor/lua.js"></script>
 <script type="text/javascript" src="main.js"></script>
-<script type='text/javascript' src="entry.js"></script>
-<script type='text/javascript' src="plotter.js"></script>
-<script type='text/javascript' src="draggable.js"></script>
+<script type='text/javascript' src="js/entry.js"></script>
+<script type='text/javascript' src="js/plotter.js"></script>
+<script type='text/javascript' src="js/draggable.js"></script>
 <script>
 
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -55,6 +55,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
       canvas.setAttribute('height', plot_arena.clientHeight);
       plotter(canvas, options);
     },
+    newCanvas: function(p_str, len) {
+      const utf8decoder = new TextDecoder();
+      const options = JSON.parse(utf8decoder.decode(Module.HEAP8.slice(p_str, p_str + len)));
+      const canvas = document.createElement('canvas');
+      const plot_arena = plot_area.querySelector('.arena');
+      plot_arena.appendChild(canvas);
+      const width = (options.width === 'auto') ? plot_arena.clientWidth : parseFloat(options.width);
+      const height = (options.height === 'auto') ? plot_arena.clientHeight: parseFloat(options.height);
+      canvas.setAttribute('width', width);
+      canvas.setAttribute('height', height);
+      
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, width, height);
+    },
     slider: function(p_str, len) {
       const utf8decoder = new TextDecoder();
       const options = JSON.parse(utf8decoder.decode(Module.HEAP8.slice(p_str, p_str + len)));
@@ -72,7 +86,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       el.setAttribute('name', options['name']);
       el.setAttribute('value', options['value']);
       el.classList.add('slider');
-      // <input id="slider1" type="range" min="100" max="500" step="10" />
       wrapper.appendChild(el);
     },
     checkbox: function(p_str, len) {
@@ -81,33 +94,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
       console.log('checkbox', options);
     },
     canvas_set: function(canvasID, p_property, plen, p_value, vlen) {
-      console.log('canvas_set', ...arguments);
       const utf8decoder = new TextDecoder();
       const property = utf8decoder.decode(Module.HEAP8.slice(p_property, p_property + plen));
       const value = utf8decoder.decode(Module.HEAP8.slice(p_value, p_value + vlen));
       const cnv = plot_area.querySelectorAll('canvas')[canvasID-1];
       const ctx = cnv.getContext('2d');
-      console.log(property, value);
       ctx[property] = value;
     },
     canvas_call: function(canvasID, p_name, plen, p_values, vlen) {
-      console.log('canvas_call', ...arguments);
       const utf8decoder = new TextDecoder();
       const name = utf8decoder.decode(Module.HEAP8.slice(p_name, p_name + plen));
       const values = JSON.parse(utf8decoder.decode(Module.HEAP8.slice(p_values, p_values + vlen)));
       const cnv = plot_area.querySelectorAll('canvas')[canvasID-1];
       const ctx = cnv.getContext('2d');
-      console.log(name, values)
       ctx[name](...values);
     },
     canvas_width: function(canvasID, p_width) {
       const cnv = plot_area.querySelectorAll('canvas')[canvasID-1];
-      // const ctx = cnv.getContext('2d');
       Module.HEAP32[p_width/4] = cnv.width;
     },
     canvas_height: function(canvasID, p_height) {
       const cnv = plot_area.querySelectorAll('canvas')[canvasID-1];
-      // const ctx = cnv.getContext('2d');
       Module.HEAP32[p_height/4] = cnv.height;
     }
   });
@@ -187,13 +194,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (!bKeepParameters) {
         parameter_area.addEventListener('input', () => {
           refresh(true);
-          // const run = document.getElementById('run-script-button');
-          // const event = new MouseEvent('click', {
-          //   view: window,
-          //   bubbles: true,
-          //   cancelable: true
-          // });
-          // run.dispatchEvent(event);
         });
       }
       console.timeEnd('compute');
@@ -251,24 +251,53 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
 
   }
-
-  fetch('example.lua', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'text/plain; charset=UTF-8',
-    }
-  }).then(response => {
-    if (response.ok) {
-      response.text().then(txt => {
-        editor.setValue(txt);
-      });
-    }
+  const select = document.querySelector('#examples select');
+  const examples_list = ['simple', 'bessel', 'canvas'];
+  for (let i=0; i<examples_list.length; i++) {
+    const el = document.createElement('option');
+    const example_name = examples_list[i];
+    el.setAttribute('value', example_name)
+    el.innerText = example_name;
+    select.appendChild(el);
+  }
+  function getExample(name) {
+    const file = `examples/${name}.lua`;
+    fetch(file, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'text/plain; charset=UTF-8',
+      }
+    }).then(response => {
+      if (response.ok) {
+        response.text().then(txt => {
+          editor.setValue(txt);
+        });
+      }
+    });
+  }
+  select.addEventListener('change', (_event) => {
+    getExample(select.value);
+    // TODO: HACK!
+    const run = document.getElementById('run-script-button');
+    const event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true
+    });
+    run.dispatchEvent(event);
   });
+  getExample(examples_list[0]);
+  
 });
 </script>
 </head>
 <body>
   <div id="header">
+    <div id="examples">
+      <span>Pick an example: </span>
+      <select>
+      </select>
+    </div>
     <div id="selection">
       <ul>
         <li value="parameters" class="button">Parameters</li>
@@ -297,7 +326,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
   <div id="script-area-handle" class="resize-handle"></div>
   <div id="plot-area" class="panel">
     <div class="arena">
-      <!-- <canvas id="plot-canvas"></canvas> -->
     </div>
     <div id="horizontal-hint"></div>
     <div id="vertical-hint"></div>

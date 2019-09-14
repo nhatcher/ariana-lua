@@ -42,7 +42,7 @@ local function getDataPoints(g, xmin, xmax, points)
       datay=datay
   }
 end
-local defaults = {
+local plot_defaults = {
   points=1000,
   xmin=-5,
   xmax=5,
@@ -58,7 +58,12 @@ local defaults = {
   axiswidth=2
 }
 
-local function setDefaults(options)
+local canvas_defaults = {
+  width='auto',
+  height='auto'
+}
+
+local function setDefaults(options, defaults)
   for key, value in pairs(defaults) do
     if options[key] == nil then
       options[key] = value
@@ -66,10 +71,12 @@ local function setDefaults(options)
   end
 end
 
+
+
 function ariana.plot(funtions, options)
   local data = {};
   local ymin, ymax;
-  setDefaults(options)
+  setDefaults(options, plot_defaults)
   local xmin = options.xmin
   local xmax = options.xmax
   for i, fun in ipairs(funtions) do
@@ -145,6 +152,33 @@ function ariana.Checkbox(value, name)
   options.name = name
   plot.chekbox(json.encode(options))
   return options['value']
+end
+
+function ariana.canvas(options)
+  canvasID = canvasID + 1
+  setDefaults(options, canvas_defaults)
+  plot.new_canvas(json.encode(options))
+  local mt = {
+    __newindex=function(_, property, value)
+      canvas.set(canvasID, property, value)
+    end,
+    __index=function(_, property)
+      return function(...)
+        canvas.call(canvasID, property, json.encode({...}))
+      end
+    end
+  }
+  local proxy = {
+    canvasID=canvasID,
+    width=function()
+      return canvas.width(canvasID)
+    end,
+    height=function()
+      return canvas.height(canvasID)
+    end
+  }
+  setmetatable(proxy, mt)
+  return proxy
 end
 
 return ariana;

@@ -11,6 +11,7 @@ extern void * malloc(size_t t);
 extern void free(void *);
 // extern void draw_function(double *, double *, int len, double miny, double maxy, double xmin, double xmax, char *color, int color_len);
 extern void draw_function(const char *str, int len);
+extern void newCanvas(const char *str, int len);
 extern void slider(const char *str, int len);
 extern void checkbox(const char *str, int len);
 // LUA_TNIL		0
@@ -101,6 +102,12 @@ static int plot_function (lua_State *L) {
 	return 0;
 }
 
+static int new_canvas (lua_State *L) {
+  const char *str = lua_tostring(L, -1);
+  newCanvas(str, (int) strlen(str));
+	return 0;
+}
+
 static int plot_slider (lua_State *L) {
   const char *str = lua_tostring(L, -1);
   slider(str, (int) strlen(str));
@@ -117,6 +124,7 @@ static const luaL_Reg plot[] = {
   // {"set_point", plot_set_point},
   // {"set_function", plot_set_function},
   {"plot_function", plot_function},
+  {"new_canvas", new_canvas},
   {"checkbox", plot_checkbox},
   {"slider", plot_slider},
   {NULL, NULL}

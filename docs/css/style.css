@@ -95,7 +95,9 @@
     background-color: lightgray;
     border-bottom: 1px solid grey;
 }
-
+#header div {
+    display: inline-block;
+}
 #selection {
     text-align: center;
     line-height: 39px;
@@ -117,7 +119,7 @@
     background-color: aliceblue;
 }
 
-.resize-handle {
+/* .resize-handle {
     display: block;
     position: absolute;
     width: 8px;
@@ -137,7 +139,7 @@
 
 #parameter-area-handle,  #plot-area-handle {
     display: none;
-}
+} */
 
 /* plot-area hints*/
 #vertical-hint {

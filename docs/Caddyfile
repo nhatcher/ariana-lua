@@ -1,9 +1,0 @@
-0.0.0.0:8000
-gzip {
-  ext *
-}
-
-mime {
-  .wasm application/wasm
-  .css text/css
-}
