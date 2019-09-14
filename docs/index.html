@@ -260,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     el.innerText = example_name;
     select.appendChild(el);
   }
-  function getExample(name) {
+  function getExample(name, callback) {
     const file = `examples/${name}.lua`;
     fetch(file, {
       method: 'GET',
@@ -271,20 +271,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (response.ok) {
         response.text().then(txt => {
           editor.setValue(txt);
+          callback && callback();
         });
       }
     });
   }
   select.addEventListener('change', (_event) => {
-    getExample(select.value);
-    // TODO: HACK!
-    const run = document.getElementById('run-script-button');
-    const event = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true
+    getExample(select.value, () => {
+      // TODO: HACK!
+      const run = document.getElementById('run-script-button');
+      const event = new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true
+      });
+      run.dispatchEvent(event);
     });
-    run.dispatchEvent(event);
   });
   getExample(examples_list[0]);
   
