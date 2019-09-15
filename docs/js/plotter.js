@@ -31,7 +31,7 @@ const plotter = (function() {
       var info = document.getElementById('info');
       x = x.toPrecision(3);
       y = y.toPrecision(3);
-      // info.textContent = `x: ${x}, y:${y}`;
+      info.textContent = `x: ${x}, y: ${y}`;
   }
   function getSafeLabel(value, scale) {
       // returns a safe label for a number
@@ -160,12 +160,13 @@ const plotter = (function() {
       var vertical_hint = document.getElementById('vertical-hint');
       var horizontal_hint = document.getElementById('horizontal-hint');
       plot_area.addEventListener('mousemove', function(evt) {
-          var mouseX = (evt.clientX-rect.left)/(rect.right-rect.left)*canvas.width;
-          var mouseY = (evt.clientY-rect.top)/(rect.bottom-rect.top)*canvas.height;
+          const pixelRatio = window.devicePixelRatio;
+          var mouseX = (evt.clientX-rect.left)*canvas.width/((rect.right-rect.left));
+          var mouseY = (evt.clientY-rect.top)*canvas.height/((rect.bottom-rect.top));
           var plotX = getPlotX(mouseX);
           var plotY = getPlotY(mouseY);
-          vertical_hint.style.left = mouseX + 'px';
-          horizontal_hint.style.top = mouseY + 'px';
+          vertical_hint.style.left = (mouseX/pixelRatio) + 'px';
+          horizontal_hint.style.top = (mouseY/pixelRatio) + 'px';
 
           notifyPosition(plotX, plotY);
       });

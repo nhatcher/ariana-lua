@@ -55,6 +55,52 @@ local functions = {
 ariana.plot(functions, options)
 ```
 
+Note the glaring naming inconsistencies (`ariana.plot` lowercase `p` vs `ariana.Slider` sign of a research project under heavy refactoring).
+now you can activate the parameters panel and change the Slider to see how your plot depends on that particular parameter.
+
+You can plot as many functions as you want, just add them to the list.
+
+Currently the supported options for the plot are not many:
+
+```lua
+local plot_defaults = {
+  points=1000,
+  xmin=-5,
+  xmax=5,
+  padding={
+    left=10,
+    right=10,
+    top=10,
+    bottom=10
+  },
+  gridcolor='#ccc',
+  gridwidth=1,
+  axiscolor='#ccc',
+  axiswidth=2
+}
+```
+
+But I will work on that. Most notably you cannot set a title of the plot or axis.
+
+A plot command returns a canvas context:
+
+```lua
+local ctx = ariana.plot(functions, options)
+
+-- We get back a handle to the canvas
+-- We can get the width and height of the canvas
+width = ctx.width()
+height = ctx.height()
+
+ctx.font = '48px serif';
+ctx.fillText('A Bessel function!', width/2 - 100, 50);
+```
+
+So, as you can see you can use the full power of canvas to add things to your plot.
+Currently, this is very limited though, it would be very though to center something on the screen, for instance.
+
+You can have a canvas context without a plot.
+
 
 
 

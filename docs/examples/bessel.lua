@@ -11,6 +11,12 @@ end
 
 -- some options 
 local options = {
+  padding= {
+    top=100,
+    bottom=10,
+    left=10,
+    right=10
+  },
   xmin=-20,
   xmax=20
 }
@@ -24,7 +30,8 @@ local ctx = ariana.plot(functions, options)
 width = ctx.width()
 height = ctx.height()
 
-ctx.fillStyle = 'green'
-ctx.fillRect(width/2 - 10*a, height/2 - 10*a, 20*a, 20*a)
+ctx.font = '48px serif'
+ctx.fillText('A Bessel function!', width/2 - 100, 50)
+
 
 

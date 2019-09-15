@@ -51,8 +51,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
       const canvas = document.createElement('canvas');
       const plot_arena = plot_area.querySelector('.arena');
       plot_arena.appendChild(canvas);
-      canvas.setAttribute('width', plot_arena.clientWidth);
-      canvas.setAttribute('height', plot_arena.clientHeight);
+      const width = plot_arena.clientWidth;
+      const height = plot_arena.clientHeight;
+      const pixelRatio = window.devicePixelRatio;
+      canvas.setAttribute('width', pixelRatio*width);
+      canvas.setAttribute('height', pixelRatio*height);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
       plotter(canvas, options);
     },
     newCanvas: function(p_str, len) {
@@ -344,6 +349,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     <div id="horizontal-hint"></div>
     <div id="vertical-hint"></div>
     <div class="footer">
+      <div id=info></div>
       <div class="right">
         <span id="next-plot" class="button">Next</span>
       </div>
