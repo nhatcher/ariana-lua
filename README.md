@@ -26,6 +26,37 @@ It has a package `ariana` that extends the language with:
 * Canvas manipulation
 * Creation of parameters
 
+A simple example:
+
+```lua
+-- We import Ariana's tools
+local ariana = require "ariana"
+
+-- We can create a slider!
+-- Has value 1, a minimum of 0 and maximum of 5.
+-- We give it a name so we can identify it
+local a = ariana.Slider(1, 0, 5, 'a')
+
+-- Define the function we want to draw
+local function sinc(x)
+  return math.sin(a*x)/x
+end
+
+-- We define options and the functions we want to plot
+local options = {
+  xmin=-20,
+  xmax=20
+}
+local functions = {
+  {name=sinc, color="red", width=1},
+}
+
+-- And plot them
+ariana.plot(functions, options)
+```
+
+
+
 
 
 
