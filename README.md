@@ -99,21 +99,47 @@ ctx.fillText('A Bessel function!', width/2 - 100, 50);
 So, as you can see you can use the full power of canvas to add things to your plot.
 Currently, this is very limited though, it would be very though to center something on the screen, for instance.
 
-You can have a canvas context without a plot.
-
-
-
-
-
-
+You can have a canvas context without a plot. See the Mandelbrot example. That example will teach you a bit of the performance hit taken by all this technology, there is right now a factor of 10 (a pure javascript being ten times faster than this Lua implementation)
 
 
 DESIGN CHOICES
 --------------
 
+On a first look it would seem that implementing the whole thing in javascript and a bunch of high speed function in webassembly would be a better way to go. Indeed it would take not a lot of time to reproduce all this in a jsbin in javascript.
+
+But I wanted to see how far can I go with a different language. An old dream of mine is to create a full fledged Computer Algebra System (CAS), that is a little bit out of my reach right now because of time considerations. One of the fist steps in that direction would be to create my own programming language (I call it the K programming language) that would be well suited for mathematical expressions.
+
+Lua is not that kind of a language, but it is a very minimal language that can be embedded anywhere.
+It is versatile and expressive and has been around since 1993. So after javascript Lua is a very nice second choice. And it is probably more user friendly than javascript. It is also a very easy to extend language, it was build that way. So I thought, let's go ahead and give this a try.
+
+What all this means is that when you load the webpage the whole Lua virtual machine is downloaded from the server and running in your browser.
+
+### Why the name?
+
+Ariana is the middle name of my ex-wife whom I love deeply. You might find a repo with that name in my account with an earlier attempt with the K-programming Language (after my father's name _Keith_ and the _K-theory_ in mathematics).
+
+These days I am in love with Brazil, and like many bits of our world is a place that needs as much love as we can give it. Lua (means Moon in the Portuguese language, 'e eu estou aprendendo português') is exceedingly beautiful and well orchestrated piece of C code and an early love of mine. Also Lua-jit is a fantastic place to start learning Just In Time compilers and a testament of how humans working together can build tools that exceed expectations. Regrettably I cannot port that to the web right now.
+
+Until I can find something that rolls better in the mouth and convey all these feelings we are stuck with `ariana-lua`.
+
 
 ROADMAD
 -------
+
+I would like to reach a stage (_stage 0_) in which the tool is usable. That means:
+
+* Clean code, bug free
+* Complete implementations
+* Documentation of Lua extensions
+* A few examples
+* UI polishing and functionality (probably not made by myself)
+* Not yet implemented but could be there for stage 0:
+     * ODE solvers
+     * Matrix manipulations
+     * Big ints and arbitrary precision arithmetic
+     * ...
+
+A further _stage 1_ would add the possibility of saving and sharing scripts
 
 BUILD INSTRUCTIONS
 ------------------
