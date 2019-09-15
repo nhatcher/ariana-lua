@@ -1,10 +1,14 @@
 local ariana = require "ariana"
 
+-- Same in pure javascript:
+-- https://jsbin.com/xarolujeca/edit?html,css,js,output
+
+
 local function mandelbrot(x, y, maxiter)
   local cx = x
   local cy = y
   for n = 0, maxiter do
-    if x*x + y*y > 10 then
+    if x*x + y*y > 4 then
       return n
     end
     local xtemp = x*x - y*y + cx
