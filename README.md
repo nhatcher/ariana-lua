@@ -123,7 +123,7 @@ These days I am in love with Brazil, and like many bits of our world is a place 
 Until I can find something that rolls better in the mouth and convey all these feelings we are stuck with `ariana-lua`.
 
 
-ROADMAD
+ROADMAP
 -------
 
 I would like to reach a stage (_stage 0_) in which the tool is usable. That means:
