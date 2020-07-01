@@ -25,7 +25,7 @@ cephes:
 	cd cephes && make all
 
 lua:
-	cd lua-5.4.0/src && make generic CC='emcc -s ONLY_MY_CODE -s ASSERTIONS=1'
+	cd lua-5.4.0/src && make generic CC='emcc -s ASSERTIONS=1'
 
 clean:
 	cd lua-5.4.0/src && make clean
