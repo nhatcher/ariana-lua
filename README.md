@@ -17,7 +17,7 @@ DOCUMENTATION
 The screen has for panels (parameters, script, plots and output). You can choose which panels to see at a given time. Normally you would write a few lines in the script panel and observe the plots.
 
 
-Scripts are written in [Lua 5.3](https://www.lua.org/manual/5.3/manual.html). But the language is so simple that you can have a look at a couple of the examples and do what you need. 
+Scripts are written in [Lua 5.4](https://www.lua.org/manual/5.4/manual.html). But the language is so simple that you can have a look at a couple of the examples and do what you need. 
 
 It has a package `ariana` that extends the language with:
 
