@@ -51,7 +51,7 @@ static int tfunc_Gamma (lua_State *L) {
 
 static int tfunc_Zeta (lua_State *L) {
 	double x = luaL_checknumber(L, 1);
-	lua_pushnumber(L, cephes_zetac(x));
+	lua_pushnumber(L, 1+cephes_zetac(x));
 	return 1;
 }
 // /* cephes/i0.c */
