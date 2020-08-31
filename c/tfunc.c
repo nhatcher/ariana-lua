@@ -43,7 +43,11 @@ static int tfunc_BesselK (lua_State *L) {
 	return 1;
 }
 
-
+static int tfunc_Gamma (lua_State *L) {
+	double x = luaL_checknumber(L, 1);
+	lua_pushnumber(L, cephes_gamma(x));
+	return 1;
+}
 
 // /* cephes/i0.c */
 // double cephes_i0(double x);
@@ -94,5 +98,7 @@ int luaopen_tfunc (lua_State *L) {
 	lua_setglobal(L, "BesselI");
 	lua_pushcfunction(L, tfunc_BesselK);
 	lua_setglobal(L, "BesselK");
+	lua_pushcfunction(L, tfunc_Gamma);
+	lua_setglobal(L, "Gamma");
   return 1;
 }
