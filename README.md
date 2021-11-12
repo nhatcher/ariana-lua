@@ -1,7 +1,7 @@
 DESCRIPTION
 -----------
 
-Ariana-Lua (name probably will change!) is a research project.
+Ariana-Lua (name probably will change!) is a research project. :)
 
 The idea is to have the Lua scripting language to plot mathematical functions in the browser.
 
