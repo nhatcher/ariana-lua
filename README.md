@@ -7,8 +7,8 @@ The idea is to have the Lua scripting language to plot mathematical functions in
 
 This currently:
 
-1. Extends Lua with some mathematicaL functions (the cephes library)
-2. Extends Lua with some functions that will eventually call the javascript plotting functions
+1. Extends Lua with some mathematicaL functions (the cephes library).
+2. Extends Lua with some functions that will eventually call the javascript plotting functions.
 3. Compile the whole shebang to webassembly.
 
 DOCUMENTATION
