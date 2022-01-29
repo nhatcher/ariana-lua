@@ -1,5 +1,4 @@
-DESCRIPTION
------------
+## DESCRIPTION
 
 Ariana-Lua (name probably will change!) is a research project. :)
 
@@ -7,12 +6,11 @@ The idea is to have the Lua scripting language to plot mathematical functions in
 
 This currently:
 
-1. Extends Lua with some mathematicaL functions (the cephes library).
+1. Extends Lua with some mathematical functions (the cephes library).
 2. Extends Lua with some functions that will eventually call the javascript plotting functions.
-3. Compile the whole shebang to webassembly.
+3. Compile the whole shebang to WebAssembly.
 
-DOCUMENTATION
--------------
+## DOCUMENTATION
 
 The screen has four panels (parameters, script, plots and output). You can choose which panels to see at a given time. Normally you would write a few lines in the script panel and observe the plots.
 
@@ -102,10 +100,9 @@ Currently, this is very limited though, it would be very though to center someth
 You can have a canvas context without a plot. See the Mandelbrot example. That example will teach you a bit of the performance hit taken by all this technology, there is right now a factor of 10 (a pure javascript being ten times faster than this Lua implementation)
 
 
-DESIGN CHOICES
---------------
+## DESIGN CHOICES
 
-On a first look it would seem that implementing the whole thing in javascript and a bunch of high speed function in webassembly would be a better way to go. Indeed it would take not a lot of time to reproduce all this in a jsbin in javascript.
+On a first look it would seem that implementing the whole thing in javascript and a bunch of high speed function in WebAssembly would be a better way to go. Indeed it would take not a lot of time to reproduce all this in a jsbin in javascript.
 
 But I wanted to see how far can I go with a different language. An old dream of mine is to create a full fledged Computer Algebra System (CAS), that is a little bit out of my reach right now because of time considerations. One of the fist steps in that direction would be to create my own programming language (I call it the K programming language) that would be well suited for mathematical expressions.
 
@@ -118,13 +115,12 @@ What all this means is that when you load the webpage the whole Lua virtual mach
 
 Ariana is the middle name of my ex-wife whom I love deeply. You might find a repo with that name in my account with an earlier attempt with the K-programming Language (after my father's name _Keith_ and the _K-theory_ in mathematics).
 
-These days I am in love with Brazil, and like many bits of our world is a place that needs as much love as we can give it. Lua (means Moon in the Portuguese language, 'e eu estou aprendendo português') is exceedingly beautiful and well orchestrated piece of C code and an early love of mine. Also Lua-jit is a fantastic place to start learning Just In Time compilers and a testament of how humans working together can build tools that exceed expectations. Regrettably I cannot port that to the web right now.
+Lua means Moon in the Portuguese language and is an exceedingly beautiful and well orchestrated piece of C code and an early love of mine. Pff topic, Lua-jit is a fantastic place to start learning Just In Time compilers and is a testament of how humans working together can build tools that exceed expectations. Regrettably I cannot port that to the web right now.
 
 Until I can find something that rolls better in the mouth and convey all these feelings we are stuck with `ariana-lua`.
 
 
-ROADMAP
--------
+## ROADMAP
 
 I would like to reach a stage (_stage 0_) in which the tool is usable. That means:
 
@@ -141,8 +137,7 @@ I would like to reach a stage (_stage 0_) in which the tool is usable. That mean
 
 A further _stage 1_ would add the possibility of saving and sharing scripts
 
-BUILD INSTRUCTIONS
-------------------
+## BUILD INSTRUCTIONS
 
 Install [emscripten](https://emscripten.org/docs/getting_started/downloads.html#sdk-download-and-install), build and serve the docs folder
 
@@ -170,12 +165,13 @@ emsdk$ source ./emsdk_env.sh
 ariana-lua$ make
 
 # serve the output folder
-ariana-lua/docs$ go run
+ariana-lua/docs$ go run server.go
 ```
 
 
-EXTERNAL DEPENDENCIES
----------------------
+## EXTERNAL DEPENDENCIES
+
+Note that they are included in this repository
 
 * Lua
 * Cephes (node-cephes)

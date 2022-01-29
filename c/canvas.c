@@ -6,7 +6,7 @@
 #include "lualib.h"
 #include <string.h>
 
-extern void * malloc(size_t t);
+extern void *malloc(size_t t);
 extern void free(void *);
 
 extern void set(int canvasID, const char *str, int len, const char *str1, int len1);

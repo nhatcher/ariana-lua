@@ -14,6 +14,7 @@ local options = {
   xmin=-20,
   xmax=20
 }
+
 local functions = {
   {name=sinc, color="red", width=1},
 }

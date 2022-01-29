@@ -536,9 +536,9 @@ function ariana.Slider(value, min, max, name)
   options['max'] = max
   options['step'] = (max-min)/100
   options.name = name
-  if not plot['keep_parameters'] then
-    plot.slider(json.encode(options))
-  end
+  -- if not plot['keep_parameters'] then
+  plot.slider(json.encode(options))
+  -- end
   return options['value']
 end
 

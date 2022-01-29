@@ -1,7 +1,7 @@
 
-function dragElement(elmnt, onMove, onDone) {
+function dragElement(element, onMove, onDone) {
   let pos1 = 0, pos3 = 0;
-  elmnt.onmousedown = dragMouseDown;
+  element.onmousedown = dragMouseDown;
 
 
   function dragMouseDown(e) {
@@ -20,8 +20,8 @@ function dragElement(elmnt, onMove, onDone) {
     // calculate the new cursor position:
     pos1 = pos3 - e.clientX;
     pos3 = e.clientX;
-    const left = elmnt.offsetLeft - pos1;
-    elmnt.style.left = (left) + 'px';
+    const left = element.offsetLeft - pos1;
+    element.style.left = (left) + 'px';
     onMove(left);
   }
 

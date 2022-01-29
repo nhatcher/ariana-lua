@@ -3,13 +3,11 @@ CC= emcc
 CFLAGS= -Oz -Wall -Ilua-5.4.4/src -Icephes -Lcephes -Llua-5.4.4/src -lm -ldl
 LLVMFLAGS= -s EXPORT_NAME="_arianaWASM"\
            -s ALLOW_MEMORY_GROWTH=1\
-					 -s EXPORTED_FUNCTIONS="['_run_lua']"\
-					 -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'\
-					 --js-library js/libs.js
+		   -s EXPORTED_FUNCTIONS="['_run_lua']"\
+		   -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'\
+		   --js-library js/libs.js
 
 all: docs/main.js
-
-
 
 docs/main-raw.js: cephes lua c/main.c
 	$(CC) $(CFLAGS) c/tfunc.c c/plot.c c/canvas.c c/main.c -o docs/main.js $(LLVMFLAGS) lua-5.4.4/src/liblua.a cephes/cephes.bc --preload-file modules/@/ --no-heap-copy
@@ -18,7 +16,6 @@ docs/main-raw.js: cephes lua c/main.c
 docs/main.js: js/shell-pre.js docs/main-raw.js js/shell-post.js
 	cat $^ > $@
 	rm -f docs/main-raw.js
-
 
 cephes:
 	cd cephes && make all

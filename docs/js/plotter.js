@@ -44,11 +44,13 @@ const plotter = (function() {
       }
       return s + '';
   }
-  function plotter(canvas, options) {
-      var plot_area = document.getElementById('plot-area');
-      var width = canvas.width;
-      var height = canvas.height;
-      var ctx = canvas.getContext('2d');
+  function plotter(wrapper, options) {
+      const canvas = wrapper.getElementsByTagName('canvas')[0];
+      const width = canvas.width;
+      const height = canvas.height;
+      const ctx = canvas.getContext('2d');
+              // <div id="horizontal-hint"></div>
+        // <div id="vertical-hint"></div>
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const xmin = options.xmin;
@@ -156,10 +158,10 @@ const plotter = (function() {
             y: evt.clientY - rect.top
           };
         }
-      var rect = canvas.getBoundingClientRect();
-      var vertical_hint = document.getElementById('vertical-hint');
-      var horizontal_hint = document.getElementById('horizontal-hint');
-      plot_area.addEventListener('mousemove', function(evt) {
+      const rect = canvas.getBoundingClientRect();
+      const vertical_hint = wrapper.getElementsByClassName('vertical-hint')[0];
+      const horizontal_hint = document.getElementsByClassName('horizontal-hint')[0];
+      wrapper.addEventListener('mousemove', function(evt) {
           const pixelRatio = window.devicePixelRatio;
           var mouseX = (evt.clientX-rect.left)*canvas.width/((rect.right-rect.left));
           var mouseY = (evt.clientY-rect.top)*canvas.height/((rect.bottom-rect.top));
@@ -170,7 +172,7 @@ const plotter = (function() {
 
           notifyPosition(plotX, plotY);
       });
-      plot_area.addEventListener('mouseleave', function(evt) {
+      wrapper.addEventListener('mouseleave', function(evt) {
           vertical_hint.style.left = '-1px';
           horizontal_hint.style.top = '-1px';
       });
