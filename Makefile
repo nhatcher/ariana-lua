@@ -5,7 +5,6 @@ LLVMFLAGS= -s EXPORT_NAME="_arianaWASM"\
            -s ALLOW_MEMORY_GROWTH=1\
 		   -s EXPORTED_FUNCTIONS="['_run_lua']"\
 		   -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'\
-		   -g2\
 		   --js-library js/libs.js
 
 all: docs/main.js
@@ -28,10 +27,10 @@ clean:
 	cd lua-5.4.6/src && make clean
 	rm -f cephes/cephes.bc
 	rm -f cephes/*.o
-	# rm -f docs/main.wasm
+	rm -f docs/main.wasm
 	rm -f docs/main.wast
 	rm -f docs/main.wasm.map
-	# rm -f docs/main.js
-	# rm -f docs/main.data
+	rm -f docs/main.js
+	rm -f docs/main.data
 
 .PHONY: all clean cephes
